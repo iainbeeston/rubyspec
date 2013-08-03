@@ -121,6 +121,22 @@ describe "Dir.glob" do
     Dir.glob("spec/**/*.rb").should == []
   end
 
+  it "matches nothing when given an empty list of paths" do
+    Dir.glob('{}').should == []
+  end
+
+  it "matches a list of paths by concatenating their individual results" do
+    expected = %w[
+      deeply/
+      deeply/nested/
+      deeply/nested/directory/
+      deeply/nested/directory/structure/
+      subdir_two/nondotfile
+      subdir_two/nondotfile.ext
+    ]
+    Dir.glob('{deeply/**/,subdir_two/*}').should == expected
+  end
+
   platform_is_not(:windows) do
     it "matches the literal character '\\' with option File::FNM_NOESCAPE" do
       Dir.mkdir 'foo?bar'
