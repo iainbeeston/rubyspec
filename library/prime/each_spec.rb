@@ -2,7 +2,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 # force reload for Prime::method_added and Prime::instance
 Object.send(:remove_const, :Prime) if defined?(Prime)
-load 'prime.rb'
+load 'mathn.rb'
 
 describe :prime_each, :shared => true do
   before :each do
@@ -30,53 +30,55 @@ describe :prime_each, :shared => true do
     @object.each { break :value }.should equal(:value)
   end
 
-  describe "when not passed a block" do
-    before :each do
-      @prime_enum = @object.each
-    end
+  ruby_version_is "1.9" do
+    describe "when not passed a block" do
+      before :each do
+        @prime_enum = @object.each
+      end
 
-    it "returns an object that is Enumerable" do
-      @prime_enum.each.should be_kind_of(Enumerable)
-    end
+      it "returns an object that is Enumerable" do
+        @prime_enum.each.should be_kind_of(Enumerable)
+      end
 
-    it "returns an object that responds to #with_index" do
-      @prime_enum.should respond_to(:with_index)
-    end
+      it "returns an object that responds to #with_index" do
+        @prime_enum.should respond_to(:with_index)
+      end
 
-    it "returns an object that responds to #with_object" do
-      @prime_enum.should respond_to(:with_object)
-    end
+      it "returns an object that responds to #with_object" do
+        @prime_enum.should respond_to(:with_object)
+      end
 
-    it "returns an object that responds to #next" do
-      @prime_enum.should respond_to(:next)
-    end
+      it "returns an object that responds to #next" do
+        @prime_enum.should respond_to(:next)
+      end
 
-    it "returns an object that responds to #rewind" do
-      @prime_enum.should respond_to(:rewind)
-    end
+      it "returns an object that responds to #rewind" do
+        @prime_enum.should respond_to(:rewind)
+      end
 
-    it "yields primes starting at 2 independent of prior enumerators" do
-      @prime_enum.next.should == 2
-      @prime_enum.next.should == 3
+      it "yields primes starting at 2 independent of prior enumerators" do
+        @prime_enum.next.should == 2
+        @prime_enum.next.should == 3
 
-      @object.each { |prime| break prime }.should == 2
-    end
+        @object.each { |prime| break prime }.should == 2
+      end
 
-    it "returns an enumerator that yields previous primes when #rewind is called" do
-      @prime_enum.next.should == 2
-      @prime_enum.next.should == 3
-      @prime_enum.rewind
-      @prime_enum.next.should == 2
-    end
+      it "returns an enumerator that yields previous primes when #rewind is called" do
+        @prime_enum.next.should == 2
+        @prime_enum.next.should == 3
+        @prime_enum.rewind
+        @prime_enum.next.should == 2
+      end
 
-    it "returns independent enumerators" do
-      enum = @object.each
-      enum.next.should == 2
-      enum.next.should == 3
+      it "returns independent enumerators" do
+        enum = @object.each
+        enum.next.should == 2
+        enum.next.should == 3
 
-      @prime_enum.next.should == 2
+        @prime_enum.next.should == 2
 
-      enum.next.should == 5
+        enum.next.should == 5
+      end
     end
   end
 end
@@ -128,20 +130,22 @@ describe :prime_each_with_arguments, :shared => true do
   end
 end
 
-describe "Prime.each" do
-  it_behaves_like :prime_each, :each, Prime
-end
+ruby_version_is "1.9" do
+  describe "Prime.each" do
+    it_behaves_like :prime_each, :each, Prime
+  end
 
-describe "Prime.each" do
-  it_behaves_like :prime_each_with_arguments, :each, Prime
-end
+  describe "Prime.each" do
+    it_behaves_like :prime_each_with_arguments, :each, Prime
+  end
 
-describe "Prime#each with Prime.instance" do
-  it_behaves_like :prime_each, :each, Prime.instance
-end
+  describe "Prime#each with Prime.instance" do
+    it_behaves_like :prime_each, :each, Prime.instance
+  end
 
-describe "Prime#each with Prime.instance" do
-  it_behaves_like :prime_each_with_arguments, :each, Prime.instance
+  describe "Prime#each with Prime.instance" do
+    it_behaves_like :prime_each_with_arguments, :each, Prime.instance
+  end
 end
 
 describe "Prime#each with Prime.new" do
