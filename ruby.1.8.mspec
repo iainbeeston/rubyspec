@@ -22,7 +22,9 @@ class MSpecScript
 
     # 1.9 feature
     '^library/cmath',
+    '^library/continuation',
     '^library/coverage',
+    '^library/fiber',
     '^library/json',
     '^library/minitest',
     '^library/prime',
