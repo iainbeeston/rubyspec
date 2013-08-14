@@ -13,8 +13,6 @@ rvm:
   - rbx-19mode
   - rbx-head
   - ree
-jdk:
-  - openjdk7
 allow_failures:
  - rvm: ruby-head
  - rvm: jruby-head
